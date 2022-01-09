@@ -1,0 +1,6 @@
+## Interface: 20502
+## Title: AutoConsumableMacros
+## Author: hjoliveira
+## Version: 1.0
+
+AutoConsumableMacros.lua
