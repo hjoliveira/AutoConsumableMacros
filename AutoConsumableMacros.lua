@@ -29,23 +29,46 @@ local consumablesByZone = {
     ["default"] = defaultConsumables
 };
 
--- TODO support healthstone ranks
--- TODO check item counts
 -- TODO update on bag item change?
 -- TODO support food/water
 
 local function InitMacros()
-    CreateMacro("AutoConsHP", "INV_MISC_QUESTIONMARK", "")
-    CreateMacro("AutoConsMana", "INV_MISC_QUESTIONMARK", "")
+    if (GetMacroBody("AutoConsHP") == nil) then
+        CreateMacro("AutoConsHP", "INV_MISC_QUESTIONMARK", "")
+    end
+
+    if (GetMacroBody("AutoConsMana") == nil) then
+        CreateMacro("AutoConsMana", "INV_MISC_QUESTIONMARK", "")
+    end
+
+    if (GetMacroBody("AutoConsHS") == nil) then
+        CreateMacro("AutoConsHS", "INV_MISC_QUESTIONMARK", "")
+    end
 end
 
 local function UpdateMacros(zone)
-	--do stuff
     local consumablesForZone = consumablesByZone[zone] or consumablesByZone["default"]
 
-    EditMacro("AutoConsHP", nil, nil, "#showtooltip\n/cast item:" .. consumablesForZone["hp"])
-    EditMacro("AutoConsMana", nil, nil, "#showtooltip\n/cast item:" .. consumablesForZone["mana"])
+    local hpCount = GetItemCount(consumablesForZone["hp"])
+    local manaCount = GetItemCount(consumablesForZone["mana"])
 
+    local hpCons = hpCount > 0 and consumablesForZone["hp"] or defaultConsumables["hp"]
+    local manaCons = manaCount > 0 and consumablesForZone["mana"] or defaultConsumables["mana"]
+
+    EditMacro("AutoConsHP", nil, nil, "#showtooltip\n/cast item:" .. hpCons)
+    EditMacro("AutoConsMana", nil, nil, "#showtooltip\n/cast item:" .. manaCons)
+
+end
+
+local function UpdateHealthstoneMacro()
+    -- TODO update ids
+    local largeCount = 0
+    local mediumCount = 0
+    local smallCount = GetItemCount(22103)
+
+    local hsCons = largeCount and 22103 or mediumCount and 22103 or smallCount and 22103
+
+    EditMacro("AutoConsHS", nil, nil, "#showtooltip\n/cast item:" .. hsCons)
 end
 
 -- Create our main table for this addon
@@ -57,6 +80,7 @@ AutoConsumableMacros.frame:SetFrameStrata("BACKGROUND")
 
 AutoConsumableMacros.frame:RegisterEvent("PLAYER_LOGIN")
 AutoConsumableMacros.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+AutoConsumableMacros.frame:RegisterEvent("PLAYER_LEAVE_COMBAT")
 
 AutoConsumableMacros.frame:SetScript("OnEvent", function(self, event, ...)
     if (event == "PLAYER_LOGIN") then
@@ -69,6 +93,10 @@ AutoConsumableMacros.frame:SetScript("OnEvent", function(self, event, ...)
         print(event, zone)
 
         UpdateMacros(zone)
+    end
+
+    if (event == "PLAYER_LEAVE_COMBAT") then
+        UpdateHealthstoneMacro()
     end
 end)
 
