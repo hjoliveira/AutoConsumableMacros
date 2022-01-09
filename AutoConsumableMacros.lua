@@ -1,24 +1,34 @@
+local sscConsumables = {
+    ["hp"] = 32904, -- Cenarion Healing Salve
+    ["mana"] = 32903 -- Cenarion Mana Salve
+};
+
+local tkConsumables = {
+    ["hp"] = 32905, -- Super Healing Potion
+    ["mana"] = 32902 -- Super Mana Potion
+};
+
+local defaultConsumables = {
+    ["hp"] = 22829, -- Super Healing Potion
+    ["mana"] = 22832 -- Super Mana Potion
+}
+
 local consumablesByZone = {
     ["Blade's Edge Mountains"] = {
         ["hp"] = 32910, -- Red Ogre Brew Special
         ["mana"] = 32909 -- Blue Ogre Brew Special
     },
-    ["Serpentshrine Cavern"] = {
-        ["hp"] = 32904, -- Cenarion Healing Salve
-        ["mana"] = 32903 -- Cenarion Mana Salve
-    },
-    ["Tempest Keep"] = {
-        ["hp"] = 32905, -- Super Healing Potion
-        ["mana"] = 32902 -- Super Mana Potion
-    },
-    ["default"] = {
-        ["hp"] = 22829, -- Super Healing Potion
-        ["mana"] = 22832 -- Super Mana Potion
-    }
+    ["Serpentshrine Cavern"] = sscConsumables,
+    ["Slave Pens"] = sscConsumables,
+    ["The Underbog"] = sscConsumables,
+    ["The Steamvault"] = sscConsumables,
+    ["Tempest Keep"] = tkConsumables,
+    ["The Botanica"] = tkConsumables,
+    ["The Mechanar"] = tkConsumables,
+    ["The Arcatraz"] = tkConsumables,
+    ["default"] = defaultConsumables
 };
 
--- TODO update TK
--- TODO add dungeons
 -- TODO support healthstone ranks
 -- TODO check item counts
 -- TODO update on bag item change?
