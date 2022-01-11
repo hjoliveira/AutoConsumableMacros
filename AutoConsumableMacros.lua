@@ -102,7 +102,7 @@ local function UpdateBuffFoodMacro()
 
     local foodId = basiliskCount > 0 and blackenedBasilisk or serpentCount > 0 and crunchySerpent or poachedBluefish
 
-    EditMacro("AutoConsHP", nil, nil, "#showtooltip\n/cast item:" .. foodId)
+    EditMacro("AutoConsSpellPowerFood", nil, nil, "#showtooltip\n/cast item:" .. foodId)
 end
 
 AutoConsumableMacros = AutoConsumableMacros or {}
