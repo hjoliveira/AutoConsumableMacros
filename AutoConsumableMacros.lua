@@ -49,6 +49,10 @@ local function InitMacros()
     if (GetMacroBody("AutoConsWater") == nil) then
         CreateMacro("AutoConsWater", "INV_MISC_QUESTIONMARK", "")
     end
+
+    if (GetMacroBody("AutoConsSpellPowerFood") == nil) then
+        CreateMacro("AutoConsSpellPowerFood", "INV_MISC_QUESTIONMARK", "")
+    end
 end
 
 local function UpdatePotionMacros(zone)
@@ -62,7 +66,6 @@ local function UpdatePotionMacros(zone)
 
     EditMacro("AutoConsHP", nil, nil, "#showtooltip\n/cast item:" .. hpId)
     EditMacro("AutoConsMana", nil, nil, "#showtooltip\n/cast item:" .. manaId)
-
 end
 
 local largeHsId = 22105
@@ -72,13 +75,10 @@ local smallHsId = 22103
 local function UpdateHealthstoneMacro()
     local largeCount = GetItemCount(largeHsId)
     local mediumCount = GetItemCount(mediumHsId)
-    local smallCount = GetItemCount(smallHsId)
 
-    local hsId = largeCount > 0 and largeHsId or mediumCount > 0 and mediumHsId or smallCount > 0 and smallHsId
+    local hsId = largeCount > 0 and largeHsId or mediumCount > 0 and mediumHsId or smallHsId
 
-    if hsId then
-        EditMacro("AutoConsHS", nil, nil, "#showtooltip item:" .. hsId .. "\n/cast item:" .. largeHsId .. "\n/cast item:" .. mediumHsId .. "\n/cast item:" .. smallHsId)
-    end
+    EditMacro("AutoConsHS", nil, nil, "#showtooltip item:" .. hsId .. "\n/cast item:" .. largeHsId .. "\n/cast item:" .. mediumHsId .. "\n/cast item:" .. smallHsId)
 end
 
 local function UpdateFoodMacros()
@@ -91,7 +91,19 @@ local function UpdateFoodMacros()
     EditMacro("AutoConsWater", nil, nil, "#showtooltip\n/cast item:" .. waterId)
 end
 
--- TODO spell power food
+local blackenedBasilisk = 27657
+local crunchySerpent = 31673
+local poachedBluefish = 27665
+
+local function UpdateBuffFoodMacro()
+    -- TODO sort by count ascending
+    local basiliskCount = GetItemCount(blackenedBasilisk)
+    local serpentCount = GetItemCount(crunchySerpent)
+
+    local foodId = basiliskCount > 0 and blackenedBasilisk or serpentCount > 0 and crunchySerpent or poachedBluefish
+
+    EditMacro("AutoConsHP", nil, nil, "#showtooltip\n/cast item:" .. foodId)
+end
 
 AutoConsumableMacros = AutoConsumableMacros or {}
 AutoConsumableMacros.frame = CreateFrame("Frame", "AutoConsumableMacros", UIParent)
@@ -99,7 +111,6 @@ AutoConsumableMacros.frame:SetFrameStrata("BACKGROUND")
 
 AutoConsumableMacros.frame:RegisterEvent("PLAYER_LOGIN")
 AutoConsumableMacros.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
--- AutoConsumableMacros.frame:RegisterEvent("PLAYER_LEAVE_COMBAT")
 AutoConsumableMacros.frame:RegisterEvent("UNIT_INVENTORY_CHANGED")
 
 AutoConsumableMacros.frame:SetScript("OnEvent", function(self, event, ...)
@@ -117,6 +128,7 @@ AutoConsumableMacros.frame:SetScript("OnEvent", function(self, event, ...)
     if (event == "PLAYER_LOGIN" or event == "UNIT_INVENTORY_CHANGED") then
         UpdateHealthstoneMacro()
         UpdateFoodMacros()
+        UpdateBuffFoodMacro()
     end
 end)
 
