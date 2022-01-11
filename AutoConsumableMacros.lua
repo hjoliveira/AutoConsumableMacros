@@ -19,7 +19,7 @@ local consumablesByZone = {
         ["mana"] = 32909 -- Blue Ogre Brew Special
     },
     ["Serpentshrine Cavern"] = sscConsumables,
-    ["Slave Pens"] = sscConsumables,
+    ["The Slave Pens"] = sscConsumables,
     ["The Underbog"] = sscConsumables,
     ["The Steamvault"] = sscConsumables,
     ["Tempest Keep"] = tkConsumables,
@@ -65,16 +65,19 @@ local function UpdatePotionMacros(zone)
 
 end
 
-local function UpdateHealthstoneMacro()
-    -- TODO update ids
-    local largeCount = 0
-    local mediumCount = 0
-    local smallCount = GetItemCount(22103)
+local largeHsId = 22105
+local mediumHsId = 22104
+local smallHsId = 22103
 
-    local hsId = largeCount > 0 and 22103 or mediumCount > 0 and 22103 or smallCount > 0 and 22103
+local function UpdateHealthstoneMacro()
+    local largeCount = GetItemCount(largeHsId)
+    local mediumCount = GetItemCount(mediumHsId)
+    local smallCount = GetItemCount(smallHsId)
+
+    local hsId = largeCount > 0 and largeHsId or mediumCount > 0 and mediumHsId or smallCount > 0 and smallHsId
 
     if hsId then
-        EditMacro("AutoConsHS", nil, nil, "#showtooltip\n/cast item:" .. hsId)
+        EditMacro("AutoConsHS", nil, nil, "#showtooltip item:" .. hsId .. "\n/cast item:" .. largeHsId .. "\n/cast item:" .. mediumHsId .. "\n/cast item:" .. smallHsId)
     end
 end
 
