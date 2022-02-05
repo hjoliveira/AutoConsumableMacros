@@ -91,16 +91,37 @@ local function UpdateFoodMacros()
     EditMacro("AutoConsWater", nil, nil, "#showtooltip\n/cast item:" .. waterId)
 end
 
-local blackenedBasilisk = 27657
-local crunchySerpent = 31673
-local poachedBluefish = 27665
+local buffFoods = {
+    {
+        id = 27657, -- blackened basilisk
+        count = 0
+    },
+    {
+        id = 31673, -- crunchy serpent
+        count = 0
+    },
+    {
+        id = 27665, -- poached bluefish
+        count = 0
+    }
+}
 
 local function UpdateBuffFoodMacro()
-    -- TODO sort by count ascending
-    local basiliskCount = GetItemCount(blackenedBasilisk)
-    local serpentCount = GetItemCount(crunchySerpent)
+    for i,v in ipairs(buffFoods) do
+        buffFoods[i]["count"] = GetItemCount(buffFoods[i]["id"])
+    end
 
-    local foodId = basiliskCount > 0 and blackenedBasilisk or serpentCount > 0 and crunchySerpent or poachedBluefish
+    table.sort(buffFoods, function(a, b)
+        return a["count"] < b["count"]
+    end)
+
+    local foodId = buffFoods[1]["id"]
+    for i,v in ipairs(buffFoods) do
+        if (buffFoods[i]["count"] > 0) then
+            foodId = buffFoods[i]["id"]
+            break;
+        end
+    end
 
     EditMacro("AutoConsSpellPowerFood", nil, nil, "#showtooltip\n/cast item:" .. foodId)
 end
